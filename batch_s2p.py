@@ -24,7 +24,7 @@ def run_batch(path_list):
         print('  ----> Starting on time series {}/{} (path= {})'.format(i+1, len(db), dbi['data_path'][0]))
         opsEnd = run_s2p(ops=ops, db=dbi)
 
-    print('Done with {}/{} time series'.format(len(i+1), len(db)))
+    print('Done with {}/{} time series'.format(i+1, len(db)))
 
 
 def get_paths():
