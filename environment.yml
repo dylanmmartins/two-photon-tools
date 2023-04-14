@@ -1,0 +1,28 @@
+# install: conda env create -f environment.yml
+# update:  conda env update -f environment.yml
+
+# for linux, replace
+#   - "deeplabcut[gui]"
+# with
+#   - deeplabcut
+
+name: hf_behavior
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - jupyter
+  - nb_conda
+  - nb_conda_kernels
+  - matplotlib
+  - tqdm
+  - pydantic
+  - psygnal
+  - pip:
+    - pysimplegui
+    - psygnal
+    - pytomlpp
+    - pyyaml
+    - appdirs

@@ -3,6 +3,7 @@ import os
 import argparse
 import numpy as np
 import PySimpleGUI as sg
+
 from suite2p import run_s2p, default_ops
 
 sg.theme('Default1')
@@ -83,12 +84,13 @@ def get_paths():
 
     return path_list
 
-
-if __name__=='__main__':
-    
+def batch_s2p():
     # get paths for each time series
     path_list = get_paths()
 
     # run suite2p on each time series
     run_batch(path_list)
 
+
+if __name__=='__main__':
+    batch_s2p
