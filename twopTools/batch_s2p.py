@@ -4,13 +4,13 @@ import argparse
 import numpy as np
 import PySimpleGUI as sg
 
-from suite2p import run_s2p, default_ops
+from suite2p import run_s2p
 
 sg.theme('Default1')
 
 def run_batch(path_list):
 
-    ops = default_ops()
+    ops = run_s2p.default_ops()
 
     db = []
     for p in path_list:

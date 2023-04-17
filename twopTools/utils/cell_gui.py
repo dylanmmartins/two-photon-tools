@@ -6,16 +6,8 @@ import twopTools as tpt
 
 def cell_review(cell_id, recdict, page, review_total=20):
 
-    Fsub = recdict['F'][cell_id,:].copy() - recdict['Fneu'][cell_id,:].copy()
-
-    # cell map
-    cell_imgs_fig = tpt.plot_cell_imgs(recdict['stat'], recdict['ops'], cell_id)
-
-    # cell props
-    cell_props_fig = tpt.plot_cell_props(recdict['stats'], recdict['goodcells'], cell_id)
-
-    # plot cell trace
-    cell_trace_fig = tpt.plot_fluor(recdict['F'][cell_id,:], recdict['Fneu'][cell_id,:], Fsub)
+    # cell figure
+    fig = tpt.make_cell_fig(recdict, cell_id)
 
     # write cell summary text
     props_list = [
@@ -29,7 +21,7 @@ def cell_review(cell_id, recdict, page, review_total=20):
     ]
     multilineprops = ''
     for item in props_list:
-        multilineprops.append(item + '\n')
+        multilineprops += item + '\n'
 
     disable_submit = True
     disable_next = False
@@ -51,55 +43,66 @@ def cell_review(cell_id, recdict, page, review_total=20):
     elif recdict['stats']['hand_label'][cell_id] == 2:
         radlab_good = True
 
-
     layout = [
         [sg.Text('Cell {} (reviewing {}/{})'.format(cell_id, page, review_total))],
-        [sg.Canvas(key='imgs_canvas'), sg.Canvas(key='props_canvas')],
-        [sg.Canvas(key='trace_canvas'), sg.Multiline(multilineprops)],
-        [sg.Radio('Bad', 'radlab', key='bad', default=radlab_bad),
-        sg.Radio('Ignore', 'radlab', key='ignore', default=radlab_ignore),
-        sg.Radio('Good', 'radlab', key='good', default=radlab_good)],
-        [sg.Button('Previous', allow_events=True, key='prev', disabled=disable_prev),
-         sg.Button('Next', allow_events=True, key='next', disabled=disable_next),
-         sg.Button('Submit', allow_events=True, key='finish', disabled=disable_submit)]
+        [sg.Canvas(key='canvas', size=(100,40))],
+        [sg.Multiline(multilineprops, horizontal_scroll=True, size=(25,9)),
+         sg.Radio('Bad', 'radlab', key='bad', default=radlab_bad),
+          sg.Radio('Ignore', 'radlab', key='ignore', default=radlab_ignore),
+          sg.Radio('Good', 'radlab', key='good', default=radlab_good),
+         sg.Button('Previous', key='prev', disabled=disable_prev),
+          sg.Button('Next', key='next', disabled=disable_next),
+          sg.Button('Submit', key='finish', disabled=disable_submit)]
     ]
 
-    w = sg.Window('Review Cells', layout, finalize=True, element_justification='center')
+    # w = sg.Window('Review Cells', layout, finalize=True,
+    #               , size=(1400, 1000))
 
-    tpt.draw_figure(w['imgs_canvas'].TKCanvas, cell_imgs_fig)
-    tpt.draw_figure(w['props_canvas'].TKCanvas, cell_props_fig)
-    tpt.draw_figure(w['trace_canvas'].TKCanvas, cell_trace_fig)
+    w = sg.Window('Review Cells', layout,
+                  element_justification='center').Finalize()
+
+    tpt.draw_figure(w['canvas'].TKCanvas, fig)
+    # tpt.draw_figure(w['props_canvas'].TKCanvas, cell_props_fig)
+    # tpt.draw_figure(w['trace_canvas'].TKCanvas, cell_trace_fig)
 
     retval = None
+    label = 1
 
     while True:
         
-        event, values = w.read()
+        event, values = w.read(timeout=100)
 
         if event in (None, 'Exit'):
+            retval = 'esc'
             break
+
+        elif event=='bad':
+            label = 0
+
+        elif event=='ignore':
+            label = 1
+
+        elif event=='good':
+            label = 2
 
         elif event=='prev':
             retval = 'prev'
-            label = values['radlab'].get()
+            break
 
         elif event=='next':
             retval = 'next'
-            label = values['radlab'].get()
+            break
 
         elif event=='finish':
             retval = 'finish'
-            label = values['radlab'].get()
+            break
             
     w.close()
-
-    label_trans = {'bad': 0, 'ignore': 1, 'good': 2}
-    label = label_trans[label]
 
     return label, retval
 
 
-def cell_iter(check_inds, recdict):
+def cell_iter(recdict, check_inds):
 
     labels = np.zeros(len(check_inds))
 
@@ -114,6 +117,8 @@ def cell_iter(check_inds, recdict):
         elif retval == 'next':
             i += 1
         elif retval == 'finish':
+            break
+        elif retval == 'esc':
             break
 
     return labels

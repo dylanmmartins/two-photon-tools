@@ -50,15 +50,21 @@ def preenCells(stat_path):
         stats['cmpt'][n] = (1/stat[n]['compact'])*100
         stats['std'][n] = stat[n]['std']
         stats['ovrlap'][n] = np.sum(stat[n]['overlap']) / len(stat[n]['overlap'])
-        stats['snr'][n] = np.median(F[n,:] / Fneu[n,:])    
+        stats['snr'][n] = np.median(F[n,:] / Fneu[n,:])
+
+    Fsub = np.empty(F.shape)*np.nan
+    for n in inds:
+        Fsub[n,:] = F[n,:].copy() - Fneu[n,:].copy()
 
     recdict = {
         'stat': stat,
         'ops': ops,
         'F': F,
         'Fneu': Fneu,
+        'Fsub': Fsub,
         'iscell': iscell,
-        'stats': stats
+        'stats': stats,
+        'goodcells': goodcells
     }
 
     num_complete_iters = 0
@@ -72,7 +78,8 @@ def preenCells(stat_path):
 
         # pick 20 random cells
         not_reviewed = np.isnan(stats['hand_label'])
-        check_inds = np.random.choice(goodcells[not_reviewed], 20, replace=False)
+        possible_inds = [i for i in goodcells if not_reviewed[i]==True]
+        check_inds = np.random.choice(possible_inds, 20, replace=False)
 
         # one iteration of a cell review
         labels = tpt.cell_iter(recdict, check_inds)
