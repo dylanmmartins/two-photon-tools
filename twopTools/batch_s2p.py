@@ -4,6 +4,8 @@ import argparse
 import numpy as np
 import PySimpleGUI as sg
 
+import twopTools as tpt
+
 from suite2p import run_s2p
 
 sg.theme('Default1')
@@ -45,42 +47,7 @@ def get_paths():
         
     elif args.data_path is None:
 
-        # get base directory
-        base_path = sg.popup_get_folder('Choose initial directory')
-
-        # get path list
-        path_list = []
-
-        layout = [
-            [sg.Button('Add a path', k='add', enable_events=True),
-            sg.Button('Done', k='done', enable_events=True)],
-            [sg.Listbox(path_list, size=(80, 20), key='pathlist',
-                        enable_events=True, horizontal_scroll=True)]
-        ]
-
-        w = sg.Window('List TSeries paths', layout)
-
-        while True:
-            event, values = w.read(timeout=100)
-
-            if event in (None, 'Exit'):
-                break
-
-            elif event == 'add':
-
-                _add = sg.popup_get_folder('Choose a TSeries directory',
-                                           initial_folder=base_path,
-                                           no_window=True)
-                
-                if type(_add) != list:
-                    _add = [_add]
-                w['pathlist'].update(w['pathlist'].Values + _add)
-                
-            elif event == 'done':
-                path_list = w['pathlist'].Values
-                break
-                
-        w.close()
+        path_list = tpt.get_paths()
 
     return path_list
 
@@ -91,6 +58,5 @@ def batch_s2p():
     # run suite2p on each time series
     run_batch(path_list)
 
-
 if __name__=='__main__':
-    batch_s2p
+    batch_s2p()
