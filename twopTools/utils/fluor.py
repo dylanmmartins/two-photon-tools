@@ -4,6 +4,7 @@ import oasis
 
 def calc_F0(F):
     _hist, _bins = np.histogram(F, bins=200)
+    _bins = _bins + (np.median(np.diff(_bins))/2)
     _F0 = _bins[np.nanargmax(_hist)]
     return _F0
 

@@ -6,13 +6,13 @@ import PySimpleGUI as sg
 
 import twopTools as tpt
 
-from suite2p import run_s2p
+import suite2p
 
 sg.theme('Default1')
 
 def run_batch(path_list):
 
-    ops = run_s2p.default_ops()
+    ops = suite2p.default_ops()
 
     db = []
     for p in path_list:
@@ -25,7 +25,7 @@ def run_batch(path_list):
 
     for i, dbi in enumerate(db):
         print('  ----> Starting on time series {}/{} (path= {})'.format(i+1, len(db), dbi['data_path'][0]))
-        opsEnd = run_s2p(ops=ops, db=dbi)
+        opsEnd = suite2p.run_s2p(ops=ops, db=dbi)
 
     print('Done with {}/{} time series'.format(i+1, len(db)))
 
@@ -47,7 +47,7 @@ def get_paths():
         
     elif args.data_path is None:
 
-        path_list = tpt.get_paths()
+        path_list = tpt.choose_dirs()
 
     return path_list
 
