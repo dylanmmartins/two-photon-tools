@@ -8,6 +8,10 @@ import twopTools as tpt
 
 def preenCells(s2p_path, thresh_vals=None):
 
+    path_last_dir = os.path.split(s2p_path)[1]
+    if ('TSeries' in s2p_path) and (path_last_dir != 'plane0'):
+        s2p_path = os.path.join(s2p_path, 'suite2p/plane0')
+
     # load data
     F = np.load(os.path.join(s2p_path,'F.npy'))
     Fneu = np.load(os.path.join(s2p_path,'Fneu.npy'))
@@ -169,6 +173,8 @@ if __name__ == '__main__':
     # get paths to suite2p output directories
 
     path_list = tpt.choose_dirs()
+
+    path_list = [p for p in path_list if p!='']
 
     for i, path in enumerate(path_list):
 
