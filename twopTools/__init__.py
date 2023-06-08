@@ -5,6 +5,10 @@ from .batch_s2p import batch_s2p
 from .cellReviewGUI import cellReviewGUI
 from .preenCells import preenCells
 
+from .utils.path import (
+    list_subdirs
+)
+
 from .utils.cell_figs import (
     draw_figure,
     imnorm,

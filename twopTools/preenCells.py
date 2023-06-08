@@ -176,6 +176,13 @@ if __name__ == '__main__':
 
     path_list = [p for p in path_list if p!='']
 
+    for p in path_list:
+        for sp in tpt.list_subdirs(p):
+            if (len(sp)==3) and (sp[0]=='R'):
+                os.path.join(p, sp, 'TwoPhotonTimeSeries')
+
+
+
     for i, path in enumerate(path_list):
 
         print('  ->  Processing recording {}/{} (path={})'.format(
