@@ -76,7 +76,8 @@ def preenCells(s2p_path, thresh_vals=None):
         for n in inds:
             _testval = props[k][n]
             if not np.isnan(_testval):
-                _kbool[n] = eval(evlstm.format(_testval))
+                if np.isfinite(_testval):
+                    _kbool[n] = eval(evlstm.format(_testval))
             else:
                 _kbool[n] = False
 
