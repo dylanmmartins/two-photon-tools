@@ -6,7 +6,7 @@
 # with
 #   - deeplabcut
 
-name: hf_behavior
+name: suite2p
 channels:
   - conda-forge
   - defaults
@@ -21,6 +21,7 @@ dependencies:
   - pydantic
   - psygnal
   - pip:
+    - suite2p
     - pysimplegui
     - psygnal
     - pytomlpp

@@ -1,3 +1,12 @@
+"""
+twopTools/batch_s2p.py
+
+Run Suite2p on directories of TIFF images.
+
+
+Written by DMM, March 2023
+"""
+
 
 import os
 import argparse
