@@ -3,6 +3,15 @@ twopTools/utils/fluor.py
 
 Analyze fluorescence and perform spike inference.
 
+Functions
+---------
+calc_F0
+    Calculate baseline fluorescence for a cell.
+calc_dFF
+    Calculate dF/F for a recording.
+spike_inference
+    Perform spike inference using OASIS.
+
 
 Written by DMM, March 2023
 """
@@ -143,4 +152,5 @@ def spike_inference(DFF):
         fluor_sig[n,:] = _fluor_sig
 
     return fluor_sig, spikes
+
 

@@ -1,13 +1,30 @@
+""" Review cells and label them as good, bad, or unsure.
+twopTools/cellReviewGUI.py
+
+Functions
+---------
+cellReviewGUI
+    Review cells and label them as good, bad, or unsure.
+_run_from_cmd
+    Run cellReviewGUI from command line.
+
+Example use
+-----------
+$ python -m twopTools.cellReviewGUI
+
+
+Written by DMM, April 2023
+"""
 
 
 import os
 import json
 import numpy as np
 import PySimpleGUI as sg
+sg.theme('Default1')
 
 import twopTools as tpt
 
-sg.theme('Default1')
 
 def cellReviewGUI(stat_path):
 
@@ -43,6 +60,7 @@ def cellReviewGUI(stat_path):
         'hand_label': np.zeros(len(inds))*np.nan,
         'hand_label_iters': {}
     }
+
     for n in inds:
         stats['prob'][n] = iscell[n][1]
         stats['rad'][n] = stat[n]['radius']
@@ -109,11 +127,20 @@ def cellReviewGUI(stat_path):
         # if finalized == True:
         #     break
 
-if __name__ == '__main__':
+
+def _run_from_cmd():
+    """ cellReviewGUI
+    """
 
     stat_path = sg.popup_get_file('Get stat.npy file',
-                      file_types=(('Numpy Files', '*.npy'),),
-                      no_window=True)
+                    file_types=(('Numpy Files', '*.npy'),),
+                    no_window=True)
 
-    # stat_path = r'F:\treadmill_gaze_control\recordings\230306_DMM_DMM001_eyecams\R01\TwoPhotonTimeSeries\suite2p\plane0\stat.npy'
     cellReviewGUI(stat_path)
+
+
+if __name__ == '__main__':
+
+    _run_from_cmd()
+
+

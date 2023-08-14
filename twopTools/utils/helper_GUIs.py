@@ -1,9 +1,23 @@
+""" File-selecting GUIs.
+twopTools/utils/helper_GUIs.py
+
+Functions
+---------
+choose_dirs
+    Open a window to select multiple directories.
+
+    
+Written by DMM, April 2023
+"""
+
 
 import PySimpleGUI as sg
-
 sg.theme('Default1')
 
+
 def choose_dirs():
+    """ Select directories to be processed.
+    """
     # get base directory
     base_path = sg.popup_get_folder('Choose initial directory')
 
@@ -42,3 +56,5 @@ def choose_dirs():
     w.close()
 
     return path_list
+
+

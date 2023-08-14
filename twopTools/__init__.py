@@ -1,3 +1,8 @@
+""" Two-photon microscopy data analysis toolkit.
+
+Written by Dylan M. Martins
+"""
+
 
 from .utils.helper_GUIs import choose_dirs
 
@@ -25,3 +30,5 @@ from .utils.fluor import (
     calc_dFF,
     spike_inference
 )
+
+

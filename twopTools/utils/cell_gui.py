@@ -1,10 +1,49 @@
+""" GUI for reviewing cells.
+twopTools/utils/cell_gui.py
 
-import PySimpleGUI as sg
+Review cells and label them as good, bad, or ignore.
+
+Functions
+---------
+cell_review
+    Review a single cell.
+cell_iter
+    Iterate through cells for review.
+
+
+Written by DMM, April 2023
+"""
+
+
 import numpy as np
+import PySimpleGUI as sg
 
 import twopTools as tpt
 
+
 def cell_review(cell_id, recdict, page, review_total=20):
+    """ Review a single cell.
+
+    Parameters
+    ----------
+    cell_id : int
+        Cell ID to review.
+    recdict : dict
+        Recording dictionary.
+    page : int
+        Page number.
+    review_total : int
+        Total number of cells to review.
+    
+    Returns
+    -------
+    label : int
+        Label for the cell. 0=bad, 1=ignore, 2=good.
+    retval: str
+        Next action for the GUI. Options are 'next',
+        'prev', or 'finish'.
+    
+    """
 
     # cell figure
     fig = tpt.make_cell_fig(recdict, cell_id)
@@ -19,6 +58,7 @@ def cell_review(cell_id, recdict, page, review_total=20):
         'ROI overlap: {:.3}%'.format(recdict['stats']['ovrlap'][cell_id]),
         'SNR: {}'.format(recdict['stats']['snr'][cell_id]),
     ]
+
     multilineprops = ''
     for item in props_list:
         multilineprops += item + '\n'
@@ -46,24 +86,21 @@ def cell_review(cell_id, recdict, page, review_total=20):
     layout = [
         [sg.Text('Cell {} (reviewing {}/{})'.format(cell_id, page, review_total))],
         [sg.Canvas(key='canvas', size=(100,40))],
-        [sg.Multiline(multilineprops, horizontal_scroll=True, size=(25,9)),
-         sg.Radio('Bad', 'radlab', key='bad', default=radlab_bad),
-          sg.Radio('Ignore', 'radlab', key='ignore', default=radlab_ignore),
-          sg.Radio('Good', 'radlab', key='good', default=radlab_good),
-         sg.Button('Previous', key='prev', disabled=disable_prev),
-          sg.Button('Next', key='next', disabled=disable_next),
-          sg.Button('Submit', key='finish', disabled=disable_submit)]
+        [
+            sg.Multiline(multilineprops, horizontal_scroll=True, size=(25,9)),
+            sg.Radio('Bad', 'radlab', key='bad', default=radlab_bad),
+            sg.Radio('Ignore', 'radlab', key='ignore', default=radlab_ignore),
+            sg.Radio('Good', 'radlab', key='good', default=radlab_good),
+            sg.Button('Previous', key='prev', disabled=disable_prev),
+            sg.Button('Next', key='next', disabled=disable_next),
+            sg.Button('Submit', key='finish', disabled=disable_submit)
+        ]
     ]
-
-    # w = sg.Window('Review Cells', layout, finalize=True,
-    #               , size=(1400, 1000))
 
     w = sg.Window('Review Cells', layout,
                   element_justification='center').Finalize()
 
     tpt.draw_figure(w['canvas'].TKCanvas, fig)
-    # tpt.draw_figure(w['props_canvas'].TKCanvas, cell_props_fig)
-    # tpt.draw_figure(w['trace_canvas'].TKCanvas, cell_trace_fig)
 
     retval = None
     label = 1
@@ -103,6 +140,21 @@ def cell_review(cell_id, recdict, page, review_total=20):
 
 
 def cell_iter(recdict, check_inds):
+    """ Iterate through cells for review.
+
+    Parameters
+    ----------
+    recdict : dict
+        Dictionary of recording data.
+    check_inds : list
+        List of cell indices to be reviewed.
+    
+    Returns
+    -------
+    labels : np.ndarray
+        Array of labels for each cell.
+    
+    """
 
     labels = np.zeros(len(check_inds))
 
@@ -122,3 +174,5 @@ def cell_iter(recdict, check_inds):
             break
 
     return labels
+
+

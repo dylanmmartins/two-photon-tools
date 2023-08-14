@@ -1,4 +1,18 @@
+""" Path utilities.
+twopTools/utils/path.py
+
+Functions
+---------
+list_subdirs
+    List subdirectories in a root directory.
+
+
+Written by DMM, June 2023
+"""
+
+
 import os
+
 
 def list_subdirs(rootdir, givepath=False):
     """ List subdirectories in a root directory.
@@ -13,3 +27,6 @@ def list_subdirs(rootdir, givepath=False):
         return paths
     elif not givepath:
         return names
+    
+
+    

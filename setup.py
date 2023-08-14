@@ -1,4 +1,11 @@
+""" Two-photon microscopy data analysis toolkit.
+
+Written by Dylan M. Martins
+"""
+
+
 import setuptools
+
 
 setuptools.setup(
     name = 'twopTools',
