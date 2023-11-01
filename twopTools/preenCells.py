@@ -18,6 +18,7 @@ Written by DMM, May 2023
 
 
 import os
+import argparse
 import h5py
 import numpy as np
 import PySimpleGUI as sg
@@ -212,10 +213,19 @@ def _run_from_cmd():
     """ Runs script from command line.
     """
 
-    # get paths to suite2p output directories
-    path_list = tpt.choose_dirs()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--data_path', type=str, default=None)
+    args = parser.parse_args()
 
-    path_list = [p for p in path_list if p!='']
+    if args.data_path is None:
+
+        # get paths to suite2p output directories
+        path_list = tpt.choose_dirs()
+
+        path_list = [p for p in path_list if p!='']
+
+    else:
+        path_list = [args.data_path]
 
     for p in path_list:
         for sp in tpt.list_subdirs(p):

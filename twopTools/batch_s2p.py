@@ -94,9 +94,10 @@ def batch_s2p():
     # run suite2p on each time series
     run_batch(path_list)
 
+    for p in path_list:
+        tpt.s2p_path(p)
+
 
 if __name__=='__main__':
     
     batch_s2p()
-
-
