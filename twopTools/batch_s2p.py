@@ -95,7 +95,7 @@ def batch_s2p():
     run_batch(path_list)
 
     for p in path_list:
-        tpt.s2p_path(p)
+        tpt._run_from_cmd(p)
 
 
 if __name__=='__main__':

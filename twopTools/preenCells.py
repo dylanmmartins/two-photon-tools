@@ -27,7 +27,7 @@ sg.theme('Default1')
 import twopTools as tpt
 
 
-def preenCells(s2p_path, thresh_vals=None):
+def preenCells(s2p_path, thresh_vals=None, doThresh=False):
     """ Preen cells from suite2p output files.
     
     Parameters
@@ -94,47 +94,53 @@ def preenCells(s2p_path, thresh_vals=None):
         props['meanSNR'][n] = np.nanmean(SignalToNoise[n,:])
         props['F0'][n] = F0[n]
 
-    if thresh_vals is None:
+    if doThresh:
+        if thresh_vals is None:
 
-        # sets which cells should be excluded
-        thresh_vals = {
-            'prob': '{} < 0.75',
-            'meanSNR': '{} < 1.0',
-            'aspect': '{} > 1.2',
-            'cmpt': '{} < 95.',
-            'std': '{} > 100.'
-        }
+            # sets which cells should be excluded
+            thresh_vals = {
+                'prob': '{} < 0.5',
+                'meanSNR': '{} < 1.0',
+                'aspect': '{} > 1.2',
+                'cmpt': '{} < 95.',
+                'std': '{} > 100.'
+            }
 
-    # bool array of good cells (according to suite2p)
-    threshcells = (iscell[:,0]==1).astype(bool)
+        # bool array of good cells (according to suite2p)
+        threshcells = (iscell[:,0]==1).astype(bool)
 
-    for k,evlstm in thresh_vals.items():
+        for k,evlstm in thresh_vals.items():
 
-        _kbool = np.zeros(len(inds), dtype=bool)
+            _kbool = np.zeros(len(inds), dtype=bool)
 
-        for n in inds:
-            _testval = props[k][n]
+            for n in inds:
+                _testval = props[k][n]
 
-            if not np.isnan(_testval):
-                if np.isfinite(_testval):
-                    _kbool[n] = eval(evlstm.format(_testval))
+                if not np.isnan(_testval):
+                    if np.isfinite(_testval):
+                        _kbool[n] = eval(evlstm.format(_testval))
 
-            else:
-                _kbool[n] = False
+                else:
+                    _kbool[n] = False
 
-        threshcells[_kbool.astype(bool)] = False
+            threshcells[_kbool.astype(bool)] = False
 
-    # firing rate cannot be zero
-    fr0_inds = np.argwhere(np.sum(F, axis=1)==0).T[0]
-    threshcells[fr0_inds] = False
+        # firing rate cannot be zero
+        fr0_inds = np.argwhere(np.sum(F, axis=1)==0).T[0]
+        threshcells[fr0_inds] = False
 
-    # cells that still pass thresholds (indices)
-    useinds = inds[threshcells]
+        # cells that still pass thresholds (indices)
+        useinds = inds[threshcells]
 
-    print('{}/{} cells are still included ({:.3}%)'.format(
+        print('{}/{} cells are still included ({:.3}%)'.format(
         np.sum(threshcells),
         len(threshcells),
         np.sum(threshcells)/len(threshcells)*100))
+
+    else:
+        useinds = inds[iscell[:,0]==1]
+
+
     
     # calculate dF/F
     normF, rawDFF, DFF = tpt.calc_dFF(
@@ -180,8 +186,9 @@ def preenCells(s2p_path, thresh_vals=None):
         'denoise_fluor': fluor
     }
 
-    for k,v in thresh_vals.items():
-        goodcells[k+'_thresh'] = v
+    if doThresh:
+        for k,v in thresh_vals.items():
+            goodcells[k+'_thresh'] = v
 
     # goodcells['cellmasks'] = {}
     masks = {}
@@ -209,15 +216,19 @@ def preenCells(s2p_path, thresh_vals=None):
                 print('Could not save {}'.format(k))
 
 
-def _run_from_cmd():
+def _run_from_cmd(parse=True):
     """ Runs script from command line.
     """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--data_path', type=str, default=None)
-    args = parser.parse_args()
+    if parse == True:
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-d', '--data_path', type=str, default=None)
+        args = parser.parse_args()
+        dpath = args.data_path
+    else:
+        dpath = parse
 
-    if args.data_path is None:
+    if dpath is None:
 
         # get paths to suite2p output directories
         path_list = tpt.choose_dirs()
@@ -225,7 +236,7 @@ def _run_from_cmd():
         path_list = [p for p in path_list if p!='']
 
     else:
-        path_list = [args.data_path]
+        path_list = [dpath]
 
     for p in path_list:
         for sp in tpt.list_subdirs(p):
@@ -245,4 +256,3 @@ if __name__ == '__main__':
 
     _run_from_cmd()
     
-

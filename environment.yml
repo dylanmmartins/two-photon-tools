@@ -9,18 +9,16 @@ dependencies:
   - python=3.8
   - pip
   - jupyter
-  # - nb_conda
-  # - nb_conda_kernels
-  - matplotlib
+  - oasis-deconv
   - tqdm
   - pydantic
   - psygnal
   - pip:
     - scikit-learn
     - suite2p
-    - oasis-deconv
     - pysimplegui
     - psygnal
     - pytomlpp
     - pyyaml
     - appdirs
+    - h5py

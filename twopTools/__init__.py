@@ -6,9 +6,14 @@ Written by Dylan M. Martins
 
 from .utils.helper_GUIs import choose_dirs
 
-from .batch_s2p import batch_s2p
+from .batch_s2p import (
+    batch_s2p
+)
 from .cellReviewGUI import cellReviewGUI
-from .preenCells import preenCells
+from .preenCells import (
+    preenCells,
+    _run_from_cmd
+)
 
 from .utils.path import (
     list_subdirs
