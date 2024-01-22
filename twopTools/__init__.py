@@ -9,6 +9,7 @@ from .utils.helper_GUIs import choose_dirs
 from .batch_s2p import (
     batch_s2p
 )
+from .wfMap import main as wfMap
 from .cellReviewGUI import cellReviewGUI
 from .preenCells import (
     preenCells,
