@@ -108,7 +108,6 @@ def calc_dFF(F, Fneu, F0, inds=None, r=0.7):
 
     return normF, rawDFF, DFF
 
-
 def spike_inference(DFF):
     """ Perform spike inference using OASIS.
 
@@ -152,5 +151,4 @@ def spike_inference(DFF):
         fluor_sig[n,:] = _fluor_sig
 
     return fluor_sig, spikes
-
 

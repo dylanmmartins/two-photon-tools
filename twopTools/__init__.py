@@ -38,3 +38,4 @@ from .utils.fluor import (
 )
 
 
+from .utils.loadmat import loadmat
