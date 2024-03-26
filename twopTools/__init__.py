@@ -39,3 +39,11 @@ from .utils.fluor import (
 
 
 from .utils.loadmat import loadmat
+
+from .utils.sta import (
+    calc_spike_triggered_avg
+)
+
+from .utils.stv import (
+    calc_spike_triggered_var
+)

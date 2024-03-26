@@ -3,7 +3,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def calc_sta(spikes, stimvid, lags='zero'):
+def calc_spike_triggered_avg(spikes, stimvid, lags='zero', variance=False):
+    """ Calculate the spike-triggered average from 2P data.
+
+    Parameters
+    ----------
+    spikes : np.ndarray
+        A 1D array of binary spike events.
+    stimvid : np.ndarray
+        A 3D array of the stimulus video.
+    lags : str
+        How many lags to calculate the STA over. Options are
+        'zero' for doing no lag adjustements (default), or
+        'range' for calculating the STA over a range of lags,
+        which uses the range -4 to 4. The indexing is shifted by
+        microscope frames (so 10 Hz).
+    variance : bool
+        Default is False. When set to True, instead of calculating the
+        spike triggered average, the spike triggered variance is calculated.
+    """
+
+    if variance is True:
+        mean_sq_img_norm = np.mean(stimvid**2, axis=0)
         
     if lags == 'zero':
         lags = [0]
@@ -32,7 +53,11 @@ def calc_sta(spikes, stimvid, lags='zero'):
             nsp = np.sum(sp)
 
             sta = sta / nsp
-            sta = sta - np.mean(sta)
+
+            if variance is False:
+                sta = sta - np.mean(sta)
+            elif variance is True:
+                sta = sta - mean_sq_img_norm
 
             all_sta[c,l,:,:] = sta
 
