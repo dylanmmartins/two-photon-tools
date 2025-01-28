@@ -33,7 +33,7 @@ def calc_spike_triggered_avg(spikes, stimvid, lags='zero', variance=False):
     
     ncells = np.size(spikes, 0)
     
-    nks = np.size(stimvid, 0)
+    nks = np.shape(stimvid[0,:,:])
 
     all_sta = np.zeros([
         ncells,

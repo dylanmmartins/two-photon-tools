@@ -9,8 +9,9 @@ from .utils.helper_GUIs import choose_dirs
 from .batch_s2p import (
     batch_s2p
 )
-from .wfMap import main as wfMap
+
 from .cellReviewGUI import cellReviewGUI
+
 from .preenCells import (
     preenCells,
     _run_from_cmd
@@ -37,6 +38,7 @@ from .utils.fluor import (
     spike_inference
 )
 
+from .quickRF import quickRF
 
 from .utils.loadmat import loadmat
 
@@ -44,6 +46,3 @@ from .utils.sta import (
     calc_spike_triggered_avg
 )
 
-from .utils.stv import (
-    calc_spike_triggered_var
-)
